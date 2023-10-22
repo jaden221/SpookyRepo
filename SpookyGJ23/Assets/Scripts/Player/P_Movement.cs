@@ -11,11 +11,11 @@ public class P_Movement: MonoBehaviour
     [SerializeField] private GameObject flamePrefab;
     #region Player Flame
     [SerializeField] private GameObject plrFlame;
-    [SerializeField] private Vector2 plrFlameLeft;
-    [SerializeField] private Vector2 plrFlameRight;
-    [SerializeField] private Vector2 largeFlameScale;
-    [SerializeField] private Vector2 mediumFlameScale;
-    [SerializeField] private Vector2 smallFlameScale;
+    [SerializeField] private Vector2 plrFlameLeft = new Vector2(0.6f, 0.6f);
+    [SerializeField] private Vector2 plrFlameRight = new Vector2(-0.6f, 0.6f);
+    [SerializeField] private Vector2 largeFlameScale = new Vector2(3f, 7f);
+    [SerializeField] private Vector2 mediumFlameScale = new Vector2(2f, 6f);
+    [SerializeField] private Vector2 smallFlameScale = new Vector2(1f, 5f);
     [SerializeField] private Vector2 deadFlameScale = new Vector2(0, 0);
     [SerializeField] private float flameSizeSmoothing = 5f;
     #endregion

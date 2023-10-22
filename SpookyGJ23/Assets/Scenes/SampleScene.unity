@@ -347,11 +347,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flamePrefab: {fileID: 0}
   plrFlame: {fileID: 0}
-  plrFlameLeft: {x: 0, y: 0}
-  plrFlameRight: {x: 0, y: 0}
-  largeFlameScale: {x: 0, y: 0}
-  mediumFlameScale: {x: 0, y: 0}
-  smallFlameScale: {x: 0, y: 0}
+  plrFlameLeft: {x: 0.6, y: 0.6}
+  plrFlameRight: {x: -0.6, y: 0.6}
+  largeFlameScale: {x: 3, y: 7}
+  mediumFlameScale: {x: 2, y: 6}
+  smallFlameScale: {x: 1, y: 5}
   deadFlameScale: {x: 0, y: 0}
   flameSizeSmoothing: 5
   canMove: 0
@@ -368,7 +368,9 @@ MonoBehaviour:
   plrAnim: {fileID: 0}
   plrSpriteRenderer: {fileID: 0}
   plrAudioSource: {fileID: 0}
-  plrSounds: []
+  plrSounds:
+  - {fileID: 8300000, guid: 1668b96e48f7fbf4485c3df2ed0ec6cf, type: 3}
+  - {fileID: 8300000, guid: 1668b96e48f7fbf4485c3df2ed0ec6cf, type: 3}
 --- !u!4 &188203133
 Transform:
   m_ObjectHideFlags: 0
@@ -1133,8 +1135,8 @@ Transform:
   m_GameObject: {fileID: 584435231}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.626, y: 0.61399996, z: 0}
-  m_LocalScale: {x: 2.9547677, y: 6.9013643, z: 6.030026}
+  m_LocalPosition: {x: 0.6, y: 0.6, z: 0}
+  m_LocalScale: {x: 3, y: 7, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1390795242}
