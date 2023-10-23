@@ -8,12 +8,11 @@ public class AI_MonsterBehaviour : MonoBehaviour
     [Header("Roaming Movement")]
 
     [SerializeField] float roamSpeed = 6;
-    [SerializeField] int minRandTime = 1;
-    [SerializeField] int maxRandTime = 5;
-    float curRandTime;
-    [SerializeField] int minRandRot = 25;
-    [SerializeField] int maxRandRot = 110;
-    [SerializeField] float rotTurnSpeed = 5;
+    [SerializeField] int minRandTimeRoam = 1;
+    [SerializeField] int maxRandTimeRoam = 5;
+    [SerializeField] int minRandRotRoam = 25;
+    [SerializeField] int maxRandRotRoam = 110;
+    [SerializeField] float rotTurnSpeedRoam = 5;
     float curRandRotTarget;
     float curRotatedAmount = 0;
     float rotDirMult = 1;
@@ -26,6 +25,11 @@ public class AI_MonsterBehaviour : MonoBehaviour
 
     [SerializeField] float trackLeaveTime = 1;
     [SerializeField] Transform trackPrefab;
+
+    [Space(5)]
+    [Header("Attacking")]
+    [SerializeField] float[] healthThresholds = {.75f, .5f, .25f };
+    int curThreshold = 0;
 
     [Space(5)]
     [Header("Pounce Behaviour")]
@@ -48,6 +52,7 @@ public class AI_MonsterBehaviour : MonoBehaviour
     [SerializeField] float maxShootCircleTime = 2;
     [SerializeField] int minShootTimes = 2;
     [SerializeField] int maxShootTimes = 5;
+    [SerializeField] float shootTime = 1.5f;
     [SerializeField] string shootAnim = "Shoot";
 
     [Space(5)]
@@ -64,18 +69,26 @@ public class AI_MonsterBehaviour : MonoBehaviour
     [Header("Flee Behaviour")]
     [SerializeField] int fleeTimeMin = 4;
     [SerializeField] int fleeTimeMax = 8;
-    [SerializeField] float fleeSpeed = 30;
+    [SerializeField] float fleeSpeed = 6;
+    [SerializeField] int minRandTimeFlee = 1;
+    [SerializeField] int maxRandTimeFlee = 5;
+    [SerializeField] int minRandRotFlee = 25;
+    [SerializeField] int maxRandRotFlee = 110;
+    [SerializeField] float rotTurnSpeedFlee = 5;
+
 
     Rigidbody2D rigidbody;
     AI_LosChecker losChecker;
     SpringJoint2D springJoint;
     Animator animator;
+    Health health;
 
     Coroutine RoamInputCor;
     Coroutine LeaveTracksCor;
 
     Transform target;
     bool targetlocked;
+   
 
     void Awake()
     {
@@ -83,22 +96,35 @@ public class AI_MonsterBehaviour : MonoBehaviour
         losChecker = GetComponentInChildren<AI_LosChecker>();
         springJoint = GetComponent<SpringJoint2D>();
         animator = GetComponent<Animator>();
+        health = GetComponent<Health>();
 
         springJoint.enabled = false;
     }
 
-    void OnEnable() 
+    void OnEnable()
     {
         StartCoroutine(RoamBehaviour());
 
         losChecker.OnHasTarget += HandleHasTarget;
         losChecker.OnNoTarget += HandleNoTarget;
+
+        health.OnDeath += HandleDeath;
     }
+    
 
     void OnDisable()
     {
         losChecker.OnHasTarget -= HandleHasTarget;
         losChecker.OnNoTarget -= HandleNoTarget;
+
+        health.OnDeath -= HandleDeath;
+    }
+
+    void HandleDeath()
+    {
+        StopAllCoroutines();
+        rigidbody.velocity = Vector2.zero;
+        animator.SetBool("Dead", true);
     }
 
     void HandleHasTarget(Transform transform)
@@ -115,8 +141,16 @@ public class AI_MonsterBehaviour : MonoBehaviour
 
     void AttackTarget() 
     { 
-        //if passed health or time threshold then stop attacking target
-        
+       if (health.GetHealthPercent < curThreshold) 
+       {
+            targetlocked = false;
+            target = null;
+            curThreshold++;
+
+            StartCoroutine(FleeBehaviour());
+            return;
+       }
+
         targetlocked = true;
         int randomAttack = Random.Range(1, 4);
         switch (randomAttack) 
@@ -140,18 +174,20 @@ public class AI_MonsterBehaviour : MonoBehaviour
         //When done attacking flee and then start roaming again
     }
 
-    IEnumerator ChangeRoamInput()
+    IEnumerator ChangeMoveInput(float minTime, float maxTime, float minRot, float maxRot)
     {
+        float randTime;
+
         while (true)
         {
             curRotatedAmount = 0;
-            curRandTime = Random.Range(minRandTime, maxRandTime + 1);
-            curRandRotTarget = Random.Range(minRandRot, maxRandRot + 1);
+            randTime = Random.Range(minTime, maxTime + 1);
+            curRandRotTarget = Random.Range(minRot, maxRot + 1);
 
             rotDirMult = Random.Range(-1, 2);
             while (rotDirMult == 0) rotDirMult = Random.Range(-1, 2);
 
-            yield return new WaitForSeconds(curRandTime);
+            yield return new WaitForSeconds(randTime);
         }
     }
 
@@ -203,7 +239,8 @@ public class AI_MonsterBehaviour : MonoBehaviour
     /// <returns></returns>
     IEnumerator RoamBehaviour()
     {
-        RoamInputCor = StartCoroutine(ChangeRoamInput());
+        RoamInputCor = StartCoroutine(
+            ChangeMoveInput(minRandTimeRoam, maxRandTimeRoam, minRandRotRoam, maxRandRotRoam));
         LeaveTracksCor = StartCoroutine(LeaveTracks());
 
         animator.SetBool(walkAnim, true);
@@ -213,7 +250,7 @@ public class AI_MonsterBehaviour : MonoBehaviour
             //if has yet to reach its rotation target keep rotating
             if (Mathf.Abs(curRotatedAmount) < Mathf.Abs(curRandRotTarget))
             {
-                rotPerFrame = rotTurnSpeed * rotDirMult;
+                rotPerFrame = rotTurnSpeedRoam * rotDirMult;
 
                 rotationTrans.eulerAngles = new Vector3(0f, 0f, rotationTrans.eulerAngles.z + rotPerFrame);
 
@@ -229,7 +266,9 @@ public class AI_MonsterBehaviour : MonoBehaviour
         StopCoroutine(RoamInputCor);
         StopCoroutine(LeaveTracksCor);
 
+        animator.SetBool(walkAnim, false);
         rigidbody.velocity = Vector2.zero;
+        curRotatedAmount = 0f;
 
         //Only State to go to from here
         AttackTarget();
@@ -287,6 +326,9 @@ public class AI_MonsterBehaviour : MonoBehaviour
             Transform projInst = Instantiate(projPrefab, projSpawn.position, Quaternion.identity);
 
             projInst.right = projSpawn.right;
+
+            yield return new WaitForSeconds(shootTime);
+            animator.SetBool(shootAnim, false);
         }
 
         animator.SetBool(shootAnim, false);
@@ -327,6 +369,53 @@ public class AI_MonsterBehaviour : MonoBehaviour
         animator.SetBool(atkAnim, false);
 
         AttackTarget();
+    }
+
+    /// <summary>
+    /// Same as RoamBehviour but with minor differences
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FleeBehaviour() 
+    {
+        RoamInputCor = StartCoroutine(
+            ChangeMoveInput(minRandTimeRoam, maxRandTimeRoam, minRandRotRoam, maxRandRotRoam));
+        LeaveTracksCor = StartCoroutine(LeaveTracks());
+
+        animator.SetBool(runAnim, true);
+
+        float curTimeFleeing = 0;
+        float fleeTime = Random.Range(fleeTimeMin, fleeTimeMax);
+
+        while (curTimeFleeing < fleeTime)
+        {
+            //if has yet to reach its rotation target keep rotating
+            if (Mathf.Abs(curRotatedAmount) < Mathf.Abs(curRandRotTarget))
+            {
+                rotPerFrame = rotTurnSpeedFlee * rotDirMult;
+
+                rotationTrans.eulerAngles = new Vector3(0f, 0f, rotationTrans.eulerAngles.z + rotPerFrame);
+
+                curRotatedAmount += rotPerFrame;
+            }
+
+            rigidbody.velocity = rotationTrans.right * fleeSpeed;
+
+            curTimeFleeing += .02f;
+
+            yield return new WaitForFixedUpdate();
+        }
+
+        //Cleanup
+        StopCoroutine(RoamInputCor);
+        StopCoroutine(LeaveTracksCor);
+
+        animator.SetBool(runAnim, false);
+
+        rigidbody.velocity = Vector2.zero;
+        curRotatedAmount = 0f;
+
+        //Only State to go to from here
+        StartCoroutine(RoamBehaviour());
     }
 
     #endregion
