@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Monster
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - E_Body
   - P_Atk
   - E_Atk
-  - 
+  - E_LoSChecker
   - 
   - 
   - 

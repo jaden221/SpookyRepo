@@ -322,18 +322,18 @@ public class AI_MonsterBehaviour : MonoBehaviour
             yield return StartCoroutine(CircleTarget(Random.Range(minShootCircleTime, maxShootCircleTime)));
 
             animator.SetBool(shootAnim, true);
-
-            Transform projInst = Instantiate(projPrefab, projSpawn.position, Quaternion.identity);
-
-            projInst.right = projSpawn.right;
-
-            yield return new WaitForSeconds(shootTime);
-            animator.SetBool(shootAnim, false);
         }
 
         animator.SetBool(shootAnim, false);
 
         AttackTarget();
+    }
+
+    public void AE_Shoot() 
+    {
+        Transform projInst = Instantiate(projPrefab, projSpawn.position, Quaternion.identity);
+
+        projInst.right = projSpawn.right;
     }
 
     IEnumerator ChaseBehaviour() 
@@ -344,19 +344,23 @@ public class AI_MonsterBehaviour : MonoBehaviour
         while (curBehaviourTime < behaviourTime) 
         {
             float distToTarget = Vector2.Distance(transform.position, target.position);
-            if (distToTarget < chaseDistToAtk) //Atk
-            {
-                animator.SetBool(runAnim, false);
-                animator.SetBool(atkAnim, true);
 
-                rigidbody.velocity = Vector2.zero;
-            }
-            else //Chase Target
+            if (animator.GetBool(atkAnim) == false) 
             {
-                animator.SetBool(atkAnim, false);
-                animator.SetBool(runAnim, true);
+                if (distToTarget < chaseDistToAtk) //Atk
+                {
+                    animator.SetBool(runAnim, false);
+                    animator.SetBool(atkAnim, true);
 
-                rigidbody.velocity = (target.position - transform.position).normalized * chaseSpeed;
+                    rigidbody.velocity = Vector2.zero;
+                }
+                else //Chase Target
+                {
+                    animator.SetBool(atkAnim, false);
+                    animator.SetBool(runAnim, true);
+
+                    rigidbody.velocity = (target.position - transform.position).normalized * chaseSpeed;
+                }
             }
 
             curBehaviourTime += .02f; // .02 is time between fixed updates
