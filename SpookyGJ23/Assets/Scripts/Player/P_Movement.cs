@@ -1,5 +1,10 @@
+/*
+    sso was here bahahah
+*/
+
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,7 +22,7 @@ public class P_Movement: MonoBehaviour
     [SerializeField] private Vector2 mediumFlameScale = new Vector2(2f, 6f);
     [SerializeField] private Vector2 smallFlameScale = new Vector2(1f, 5f);
     [SerializeField] private Vector2 deadFlameScale = new Vector2(0, 0);
-    [SerializeField] private float flameSizeSmoothing = 5f;
+    // *Unused* [SerializeField] private float flameSizeSmoothing = 5f;
     #endregion
 
     [Space(5)]
@@ -42,6 +47,7 @@ public class P_Movement: MonoBehaviour
     
     [Header("Input")]
     [SerializeField] private InputActionReference moveRef;
+    [SerializeField] private InputActionReference shootRef;
     private InputAction move;
 
     [Space(5)]
