@@ -111,6 +111,10 @@ MonoBehaviour:
       volume: 1
       soundType: 0
       loop: 0
+  lifetime: 2
+  hitableMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!58 &5629322332769850779
 CircleCollider2D:
   m_ObjectHideFlags: 0

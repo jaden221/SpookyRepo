@@ -86,7 +86,7 @@ public class AI_MonsterBehaviour : MonoBehaviour
     Coroutine RoamInputCor;
     Coroutine LeaveTracksCor;
 
-    Transform target;
+    [SerializeField] Transform target;
     bool targetlocked;
    
 
@@ -162,12 +162,12 @@ public class AI_MonsterBehaviour : MonoBehaviour
 
             case 2:
                 Debug.Log("Beginning Shoot Behaviour");
-                StartCoroutine(ShootBehaviour());
+                StartCoroutine(PounceBehaviour());
                 break;
 
             case 3:
                 Debug.Log("Beginning Chase Behaviour");
-                StartCoroutine(ChaseBehaviour());
+                StartCoroutine(PounceBehaviour());
                 break;
         }
 
@@ -331,9 +331,7 @@ public class AI_MonsterBehaviour : MonoBehaviour
 
     public void AE_Shoot() 
     {
-        Transform projInst = Instantiate(projPrefab, projSpawn.position, Quaternion.identity);
-
-        projInst.right = projSpawn.right;
+        Instantiate(projPrefab, projSpawn.position, rotationTrans.rotation);
     }
 
     IEnumerator ChaseBehaviour() 

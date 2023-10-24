@@ -2,12 +2,15 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private float speed;
-    [SerializeField] private AttackData attackData;
+    [SerializeField] float speed;
+    [SerializeField] AttackData attackData;
+    [SerializeField] float lifetime = 2;
 
     void OnEnable()
     {
-        GetComponent<Rigidbody2D>().AddForce(transform.forward * speed, ForceMode2D.Impulse);
+        GetComponent<Rigidbody2D>().AddForce(speed * transform.right, ForceMode2D.Impulse);
+
+        Destroy(gameObject, lifetime);
     }
 
     void OnTriggerEnter2D(Collider2D other)
