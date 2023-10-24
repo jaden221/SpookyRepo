@@ -16,11 +16,11 @@ public class P_Movement : MonoBehaviour
     [SerializeField] private GameObject flamePrefab;
     #region Player Flame
     [SerializeField] private GameObject plrFlame;
-    [SerializeField] private Vector2 plrFlameLeft = new Vector2(0.6f, 0.6f);
-    [SerializeField] private Vector2 plrFlameRight = new Vector2(-0.6f, 0.6f);
-    [SerializeField] private Vector2 largeFlameScale = new Vector2(3f, 7f);
-    [SerializeField] private Vector2 mediumFlameScale = new Vector2(2f, 6f);
-    [SerializeField] private Vector2 smallFlameScale = new Vector2(1f, 5f);
+    [SerializeField] private Vector2 plrFlameLeft = new Vector2(0.6f, 0.87f);
+    [SerializeField] private Vector2 plrFlameRight = new Vector2(-0.6f, 0.87f);
+    [SerializeField] private Vector2 largeFlameScale = new Vector2(0.3f, 0.3f);
+    [SerializeField] private Vector2 mediumFlameScale = new Vector2(0.2f, 0.2f);
+    [SerializeField] private Vector2 smallFlameScale = new Vector2(0.13f, 0.13f);
     [SerializeField] private Vector2 deadFlameScale = new Vector2(0, 0);
     // *Unused* [SerializeField] private float flameSizeSmoothing = 5f;
     #endregion
@@ -161,15 +161,6 @@ public class P_Movement : MonoBehaviour
         lives -= lifeLoss;
         #endregion
 
-        ScalePlayerFlame();
-
-        #region Logic For Clamping The Amount Of Lives The Player Can Have
-        lives = Mathf.Clamp(lives, 0, 3);
-        #endregion
-    }
-
-    public void ScalePlayerFlame() 
-    {
         #region Logic Which Switches Scale Of Flame Depending On Life
         switch (lives)
         {
@@ -194,7 +185,41 @@ public class P_Movement : MonoBehaviour
                 break;
         }
         #endregion
+
+        #region Logic For Clamping The Amount Of Lives The Player Can Have
+        lives = Mathf.Clamp(lives, 0, 3);
+        #endregion
     }
+
+    #region Function Which Serves As An Extra Method For Scaling The Players Flame
+
+    public void ScalePlayerFlame()
+    {
+        switch (lives)
+        {
+            case 3:
+                plrFlame.transform.localScale = largeFlameScale;
+                canMove = true;
+                break;
+            case 2:
+                plrFlame.transform.localScale = mediumFlameScale;
+                canMove = true;
+                break;
+            case 1:
+                plrFlame.transform.localScale = smallFlameScale;
+                canMove = true;
+                break;
+            case 0:
+                plrFlame.transform.localScale = deadFlameScale;
+                rigidbody.velocity = Vector2.zero;
+                inputDir = Vector2.zero;
+                canMove = false;
+                GameManager.Instance.EndGame();
+                break;
+        }
+    }
+
+    #endregion
 
     #endregion
 }

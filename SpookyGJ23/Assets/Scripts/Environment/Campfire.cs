@@ -84,7 +84,8 @@ public class Campfire : MonoBehaviour
 
         yield return new WaitForSeconds(healWaitTime);
 
-        GameManager.Instance.EditPlayerHealth(1);
+        GameManager.Instance.EditPlayerHealth(-1);
+        playerScript.ScalePlayerFlame();
         player.transform.GetChild(0).GetComponent<Animator>().SetBool("heal", false);
         player.transform.GetChild(0).GetComponent<Animator>().SetBool("moving", true);
         flame.SetActive(false);

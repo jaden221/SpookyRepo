@@ -6,6 +6,9 @@ public class CullOnCloseBy : MonoBehaviour
 {
     #region Variables
 
+    [Header("GameObjects")]
+    [SerializeField] private GameObject player;
+
     [Header("Sprites")]
     [SerializeField] private SpriteRenderer thisSpriteRenderer;
     [SerializeField] private Color transparency;
@@ -24,6 +27,7 @@ public class CullOnCloseBy : MonoBehaviour
     {
         thisSpriteRenderer = GetComponent<SpriteRenderer>();
         transparency = thisSpriteRenderer.color;
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     private void LateUpdate()
