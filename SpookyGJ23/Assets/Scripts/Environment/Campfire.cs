@@ -1,6 +1,13 @@
+/*
+    Hi Isla :)
+    Hi James :)
+    Hi Frankie :)
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Campfire : MonoBehaviour
 {
@@ -18,8 +25,12 @@ public class Campfire : MonoBehaviour
     [SerializeField] private GameObject shadow;
     [SerializeField] private GameObject player;
 
+    [Header("Input")]
+    [SerializeField] private InputActionReference absorbRef;
+    private InputAction absorb;
+
     [Header("Scripts")]
-    [SerializeField] private P_Movement playerScript;
+    [SerializeField] private PlayerController playerScript;
 
     #endregion
 
@@ -27,6 +38,7 @@ public class Campfire : MonoBehaviour
 
     void Awake()
     {
+        absorb = absorbRef;
         flame = transform.GetChild(0).gameObject;
         flameLight = transform.GetChild(1).gameObject;
         shadow = transform.GetChild(2).gameObject;
@@ -38,9 +50,21 @@ public class Campfire : MonoBehaviour
         ForWhenPlayerWantsHealth();
     }
 
+    void OnEnable()
+    {
+        absorb.Enable();
+    }
+
+    void OnDisable()
+    {
+        absorb.Disable();
+    }
+
+    #region Triggers
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player")) 
+        if (collision.gameObject.CompareTag("Player"))
         {
             player = collision.gameObject;
             playerWantsHealth = true;
@@ -58,7 +82,9 @@ public class Campfire : MonoBehaviour
 
     #endregion
 
-    #region Function Player Wants Health
+    #endregion
+
+    #region Function Which Triggers When Upon The Player Wanting To Heal
     private bool flameShouldScale = false;
 
     private void ForWhenPlayerWantsHealth() 
@@ -66,9 +92,9 @@ public class Campfire : MonoBehaviour
         if (!playerWantsHealth) return;
         if (player == null) return;
 
-        playerScript = player.GetComponent<P_Movement>();
+        playerScript = player.GetComponent<PlayerController>();
 
-        if (playerScript.lives < 3 && Input.GetKeyDown(KeyCode.R)) 
+        if (playerScript.lives < 3 && absorb.WasPressedThisFrame()) 
         {
             StartCoroutine(GivePlayerHealth());
         }
@@ -78,26 +104,33 @@ public class Campfire : MonoBehaviour
 
     #endregion
 
-    private IEnumerator GivePlayerHealth() 
+    #region Function Which Enables Campfires To Give Players Health
+
+    private IEnumerator GivePlayerHealth()
     {
+        var playerSprite = player.transform.GetChild(0).GetComponent<Animator>(); //local reference to anim - don't want to store it perm
+
         playerScript.canMove = false;
-        if (!player.transform.GetChild(0).GetComponent<Animator>().GetBool("heal")) 
+        if (!playerSprite.GetBool("heal"))
         {
-            player.transform.GetChild(0).GetComponent<Animator>().SetBool("heal", true);
-            player.transform.GetChild(0).GetComponent<Animator>().SetBool("moving", false);
+            playerSprite.SetBool("heal", true);
+            playerSprite.SetBool("moving", false);
         }
         flameShouldScale = true;
-
+        
         yield return new WaitForSeconds(healWaitTime);
 
-        GameManager.Instance.EditPlayerHealth(-1);
+        GameManager.Instance.EditPlayerHealth(-1); // positive
         playerScript.ScalePlayerFlame();
-        player.transform.GetChild(0).GetComponent<Animator>().SetBool("heal", false);
-        player.transform.GetChild(0).GetComponent<Animator>().SetBool("moving", true);
+        playerSprite.SetBool("heal", false);
+        playerSprite.SetBool("moving", true);
         flame.SetActive(false);
         flameLight.SetActive(false);
         shadow.SetActive(false);
         audioSource.SetActive(false);
+        
         playerScript.canMove = true;
     }
+
+    #endregion
 }

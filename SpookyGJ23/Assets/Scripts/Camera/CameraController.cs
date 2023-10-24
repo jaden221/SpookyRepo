@@ -1,6 +1,5 @@
 /*
-    I couldn't get the new Input System to work with the camera controller. Do you think you could implement it? NVM FIXED IT
-    - sso
+    hi mum!
 */
 
 using System.Collections;

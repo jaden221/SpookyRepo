@@ -99,12 +99,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd50dc33d7be7244b4f6040368ed5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveRef: {fileID: -7279250269620896151, guid: 4facc1501e95e5042929ce7e3ece0213, type: 3}
+  move:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 6cf9fd15-32d2-4071-b047-f4cb290b4042
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   speed: 25
   attackData:
     dmgStruct:
-      damage: 0
-      staggerDamage: 0
-      canHitstop: 0
+      damage: 50
+      staggerDamage: 20
+      canHitstop: 1
       damageDealt: 0
     soundData:
       clip: {fileID: 0}
@@ -112,9 +122,6 @@ MonoBehaviour:
       soundType: 0
       loop: 0
   lifetime: 2
-  hitableMask:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!58 &5629322332769850779
 CircleCollider2D:
   m_ObjectHideFlags: 0

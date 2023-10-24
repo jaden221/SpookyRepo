@@ -377,6 +377,7 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   shadow: {fileID: 0}
   player: {fileID: 0}
+  absorbRef: {fileID: -7296939014128086280, guid: 4facc1501e95e5042929ce7e3ece0213, type: 3}
   playerScript: {fileID: 0}
 --- !u!1 &7112890621524990604
 GameObject:

@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [Space(5)]
 
     [Header("Scripts")]
-    [SerializeField] private P_Movement plrMovementScript;
+    [SerializeField] private PlayerController plrMovementScript;
 
     [Header("States")]
     [SerializeField] public bool playerIsBeingChased = false;
@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        plrMovementScript = GameObject.FindGameObjectWithTag("Player").GetComponent<P_Movement>();
+        plrMovementScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     void Start()
