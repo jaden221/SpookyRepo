@@ -99,7 +99,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd50dc33d7be7244b4f6040368ed5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 18
   attackData:
     dmgStruct:
       damage: 10
@@ -111,10 +110,18 @@ MonoBehaviour:
       volume: 1
       soundType: 0
       loop: 0
+  moveRef: {fileID: 0}
+  move:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 049f4f56-352f-449d-b1f5-e2e74966cd15
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  speed: 18
   lifetime: 2
-  hitableMask:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!50 &-4226979997098413253
 Rigidbody2D:
   serializedVersion: 4

@@ -8,6 +8,8 @@ TagManager:
   - CampFire
   - WinScreen
   - LoseScreen
+  - InnerPlayer
+  - Scenery
   layers:
   - Default
   - TransparentFX

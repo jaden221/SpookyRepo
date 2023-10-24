@@ -131,6 +131,8 @@ public class AI_MonsterBehaviour : MonoBehaviour
     {
         if (targetlocked) return;
         target = transform;
+
+        if (target.gameObject.CompareTag("Scenery") || target.gameObject.CompareTag("CampFire")) HandleNoTarget();
     }
 
     void HandleNoTarget()
