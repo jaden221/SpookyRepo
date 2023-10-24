@@ -92,6 +92,7 @@ public class PlayerController : MonoBehaviour
         plrFlame.transform.localScale = largeFlameScale;
         plrSpriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         plrAudioSource = GetComponent<AudioSource>();
+        StartCoroutine(Shooting());
     }
 
     void OnEnable()
@@ -109,7 +110,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         AnimationAndSoundsLogic();
-        ShootProjectiles();
     }
 
     void FixedUpdate()
@@ -193,7 +193,7 @@ public class PlayerController : MonoBehaviour
                 rigidbody.velocity = Vector2.zero;
                 inputDir = Vector2.zero;
                 canMove = false;
-                GameManager.Instance.EndGame();
+                GameManager.Instance.EndGame(false);
                 break;
         }
         #endregion
@@ -211,22 +211,19 @@ public class PlayerController : MonoBehaviour
         {
             case 3:
                 plrFlame.transform.localScale = largeFlameScale;
-                canMove = true;
                 break;
             case 2:
                 plrFlame.transform.localScale = mediumFlameScale;
-                canMove = true;
                 break;
             case 1:
                 plrFlame.transform.localScale = smallFlameScale;
-                canMove = true;
                 break;
             case 0:
                 plrFlame.transform.localScale = deadFlameScale;
                 rigidbody.velocity = Vector2.zero;
                 inputDir = Vector2.zero;
                 canMove = false;
-                GameManager.Instance.EndGame();
+                GameManager.Instance.EndGame(false);
                 break;
         }
     }
@@ -237,12 +234,25 @@ public class PlayerController : MonoBehaviour
 
     #region Function Which Enables The Player To Shoot Fireballs
 
-    private void ShootProjectiles() 
+    private IEnumerator Shooting() 
     {
-        if (shoot.WasPressedThisFrame())
-        {
-            Instantiate(firePrefab, transform.position, Quaternion.identity);
-        }
+        canMove = true;
+        plrAnim.SetBool("attack", false);
+
+        yield return new WaitUntil(() => shoot.WasPressedThisFrame());
+
+        Instantiate(firePrefab, transform.position, Quaternion.identity);
+        canMove = false;
+        plrAnim.SetBool("attack", true);
+        lives -= 1;
+        ScalePlayerFlame();
+
+        yield return new WaitForSeconds(1f);
+
+        plrAnim.SetBool("attack", false);
+        canMove = true;
+
+        StartCoroutine(Shooting());
     }
     
     #endregion

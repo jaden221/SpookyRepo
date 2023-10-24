@@ -14,8 +14,11 @@ public class GameManager : MonoBehaviour
     [Header("Scripts")]
     [SerializeField] private PlayerController plrMovementScript;
 
-    [Header("States")]
-    [SerializeField] public bool playerIsBeingChased = false;
+    [Space(5)]
+
+    [Header("GameObjects")]
+    [SerializeField] private GameObject gameLoseScreen;
+    [SerializeField] private GameObject gameWinScreen;
 
     #endregion
 
@@ -25,28 +28,28 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         plrMovementScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-    }
 
-    void Start()
-    {
-
+        gameWinScreen = GameObject.FindGameObjectWithTag("WinScreen");
+        gameLoseScreen = GameObject.FindGameObjectWithTag("LoseScreen");
+        gameWinScreen.SetActive(false);
+        gameLoseScreen.SetActive(false);
     }
 
     void Update()
     {
-        DebugInput();
+        //DebugInput();
     }
 
     #endregion
 
-    // REMOVE THIS BEFORE RELEASE
+    // REMOVE THIS BEFORE RELEASE - DONE
     #region Function Which Contains Inputs That Cause InGame Events Used For Testing - REMOVE THIS BEFORE RELEASE
     // REMOVE THIS BEFORE RELEASE
-    private void DebugInput()
+    /*(private void DebugInput()
     {
         if (Input.GetKeyDown(KeyCode.Minus)) { plrMovementScript.PlayerLoseLife(1);  }
         else if (Input.GetKeyDown(KeyCode.Equals)) { plrMovementScript.PlayerLoseLife(-1);  }
-    }
+    }*/
 
     #endregion
 
@@ -61,9 +64,31 @@ public class GameManager : MonoBehaviour
 
     #region Public Function Which Ends The Game
 
+    public void EndGame(bool win) 
+    {
+        plrMovementScript.canMove = false;
+        Time.timeScale = 0;
+
+        switch (win) 
+        {
+            case true:
+                gameWinScreen.SetActive(true);
+                break;
+            case false: 
+                gameLoseScreen.SetActive(true);
+                break;
+        }
+
+        //release - Debug.Log("Game Over");
+    }
+
+    #endregion
+
+    #region Public Function Which Closes The Game
+
     public void EndGame() 
     {
-        Debug.Log("Game Over");
+        Application.Quit();
     }
     
     #endregion

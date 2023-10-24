@@ -70,6 +70,7 @@ public class Health : MonoBehaviour
         if (curHealth == 0)
         {
             OnBeforeDeath?.Invoke();
+            GameManager.Instance.EndGame(true);
         }
 
         // if one of those functions hasn't added some health back preventing the death... then actually die
@@ -77,6 +78,7 @@ public class Health : MonoBehaviour
         {
             isDead = true;
             OnDeath?.Invoke();
+            GameManager.Instance.EndGame(true);
         }
     }
 

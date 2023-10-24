@@ -133,6 +133,17 @@
                 },
                 {
                     "name": "",
+                    "id": "65577314-bddd-416b-9dfb-aa8fb39bbd3d",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "52692a88-7958-40ab-a14d-64c0c7d0dc7c",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
