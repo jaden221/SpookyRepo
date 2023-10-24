@@ -1,7 +1,7 @@
 /*
     sso was here bahahah
 
-    Alfie, we're gonna do some great shit together. alhamdulillah.
+    Alfie, we're gonna do some great shit together. Alhamdulillah.
 */
 
 using System.Collections;

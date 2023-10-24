@@ -1,3 +1,7 @@
+/*
+    sso 
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -63,7 +67,7 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    #region Public Function Which Ends The Game
+    #region Public Function Which Ends The Game Depending On Parameter
 
     public void EndGame(bool win) 
     {
