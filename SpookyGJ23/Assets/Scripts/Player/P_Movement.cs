@@ -18,6 +18,7 @@ public class P_Movement : MonoBehaviour
     [SerializeField] private GameObject plrFlame;
     [SerializeField] private Vector2 plrFlameLeft = new Vector2(0.6f, 0.87f);
     [SerializeField] private Vector2 plrFlameRight = new Vector2(-0.6f, 0.87f);
+    [SerializeField] private Vector2 plrFlameUp = new Vector2(0f, 2.69f);
     [SerializeField] private Vector2 largeFlameScale = new Vector2(0.3f, 0.3f);
     [SerializeField] private Vector2 mediumFlameScale = new Vector2(0.2f, 0.2f);
     [SerializeField] private Vector2 smallFlameScale = new Vector2(0.13f, 0.13f);
@@ -138,15 +139,19 @@ public class P_Movement : MonoBehaviour
         if (inputDir != Vector2.zero) // checks for the player movement
         { 
             plrAnim.SetBool("moving", true); 
-            if (!plrAudioSource.isPlaying) { plrAudioSource.PlayOneShot(plrSounds[Random.Range(0, 1)]); } 
+            if (!plrAudioSource.isPlaying && canMove) { plrAudioSource.PlayOneShot(plrSounds[Random.Range(0, 1)]); } 
         }
         else // checks for no player movement 
             plrAnim.SetBool("moving", false);
         #endregion
 
         #region Direct Sprite To Input Direction
-        if (inputDir.x < -0.1f) { plrSpriteRenderer.flipX = true; plrFlame.transform.localPosition = plrFlameRight; }
-        else if (inputDir.x > 0.1f) { plrSpriteRenderer.flipX = false; plrFlame.transform.localPosition = plrFlameLeft; }
+        if (inputDir.x < -0.1f && canMove) plrSpriteRenderer.flipX = true;
+        else if (inputDir.x > 0.1f && canMove) plrSpriteRenderer.flipX = false;
+        else if (plrAnim.GetBool("heal") && !canMove) plrFlame.transform.localPosition = plrFlameUp;
+
+        if (plrSpriteRenderer.flipX && !plrAnim.GetBool("heal") && canMove) plrFlame.transform.localPosition = plrFlameRight;
+        else if (!plrSpriteRenderer.flipX && !plrAnim.GetBool("heal") && canMove) plrFlame.transform.localPosition = plrFlameLeft;
         // by using such a large float, inputDirection changes too fast to flip back (on PC), leaving the flipped sprite in it's last flipped state
         #endregion
     }

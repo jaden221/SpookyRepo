@@ -13,6 +13,9 @@ public class Campfire : MonoBehaviour
 
     [Header("GameObjects")]
     [SerializeField] private GameObject flame;
+    [SerializeField] private GameObject flameLight;
+    [SerializeField] private GameObject audioSource;
+    [SerializeField] private GameObject shadow;
     [SerializeField] private GameObject player;
 
     [Header("Scripts")]
@@ -25,6 +28,9 @@ public class Campfire : MonoBehaviour
     void Awake()
     {
         flame = transform.GetChild(0).gameObject;
+        flameLight = transform.GetChild(1).gameObject;
+        shadow = transform.GetChild(2).gameObject;
+        audioSource = transform.GetChild(3).gameObject;
     }
 
     void Update()
@@ -89,6 +95,9 @@ public class Campfire : MonoBehaviour
         player.transform.GetChild(0).GetComponent<Animator>().SetBool("heal", false);
         player.transform.GetChild(0).GetComponent<Animator>().SetBool("moving", true);
         flame.SetActive(false);
+        flameLight.SetActive(false);
+        shadow.SetActive(false);
+        audioSource.SetActive(false);
         playerScript.canMove = true;
     }
 }
