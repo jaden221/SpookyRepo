@@ -37,6 +37,8 @@ public class CullOnCloseBy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            collision.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = 2; // player sprite
+            collision.gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sortingOrder = 1; // player flame sprite
             canFade = true;
         }
     }
@@ -45,6 +47,8 @@ public class CullOnCloseBy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") && canFade)
         {
+            collision.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = 6; // player sprite
+            collision.gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sortingOrder = 5; // player flame sprite
             canFade = false;
         }
     }
@@ -62,10 +66,10 @@ public class CullOnCloseBy : MonoBehaviour
         switch (canFade)
         {
             case true:
-                transparency.a = Mathf.Lerp(transparency.a, 0, smoothing * Time.deltaTime);
+                transparency.a = Mathf.Lerp(transparency.a, 0.5f, smoothing * Time.deltaTime);
                 break;
             case false:
-                transparency.a = Mathf.Lerp(transparency.a, 1, smoothing / 2 * Time.deltaTime);
+                transparency.a = Mathf.Lerp(transparency.a, 1, smoothing * Time.deltaTime);
                 break;
         }
     }

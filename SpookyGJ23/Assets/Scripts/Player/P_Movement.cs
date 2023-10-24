@@ -8,7 +8,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class P_Movement: MonoBehaviour
+public class P_Movement : MonoBehaviour
 {
     #region Variables
 
@@ -28,7 +28,7 @@ public class P_Movement: MonoBehaviour
     [Space(5)]
 
     [Header("States")]
-    [SerializeField] private bool canMove = false;
+    [SerializeField] public bool canMove = false;
 
     [Space(5)]
 
@@ -115,13 +115,12 @@ public class P_Movement: MonoBehaviour
 
     private void Movement()
     {
-        if (!canMove) return;
-
-        inputDir = move.ReadValue<Vector2>().normalized;
+        if (canMove) inputDir = move.ReadValue<Vector2>().normalized;
 
         if (inputDir.magnitude != 0)
         {
-            rigidbody.velocity = inputDir * speed;
+            if (canMove) rigidbody.velocity = inputDir * speed;
+            else rigidbody.velocity = Vector3.zero;
         }
         else
         {
@@ -162,6 +161,15 @@ public class P_Movement: MonoBehaviour
         lives -= lifeLoss;
         #endregion
 
+        ScalePlayerFlame();
+
+        #region Logic For Clamping The Amount Of Lives The Player Can Have
+        lives = Mathf.Clamp(lives, 0, 3);
+        #endregion
+    }
+
+    public void ScalePlayerFlame() 
+    {
         #region Logic Which Switches Scale Of Flame Depending On Life
         switch (lives)
         {
@@ -185,10 +193,6 @@ public class P_Movement: MonoBehaviour
                 GameManager.Instance.EndGame();
                 break;
         }
-        #endregion
-
-        #region Logic For Clamping The Amount Of Lives The Player Can Have
-        lives = Mathf.Clamp(lives, 0, 3);
         #endregion
     }
 
