@@ -92,6 +92,7 @@ public class AI_MonsterBehaviour : MonoBehaviour
 
     void Awake()
     {
+        target = GameObject.FindGameObjectWithTag("Player").transform; // I CANT FUCKING FIX IT MAN I TOOK THE EASY WAY OUT
         rigidbody = GetComponent<Rigidbody2D>();
         losChecker = GetComponentInChildren<AI_LosChecker>();
         springJoint = GetComponent<SpringJoint2D>();

@@ -1,7 +1,5 @@
 /*
     sso was here bahahah
-
-    Alfie, we're gonna do some great shit together. Alhamdulillah.
 */
 
 using System.Collections;
@@ -32,6 +30,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("States")]
     [SerializeField] public bool canMove = false;
+    [SerializeField] public bool canTakeDamage = false;
 
     [Space(5)]
 
@@ -115,6 +114,16 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         Movement();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Monster") && canTakeDamage)
+        {
+            PlayerLoseLife(1);
+            ScalePlayerFlame();
+            StartCoroutine(SafeFrames());
+        }
     }
 
     #endregion
@@ -254,6 +263,17 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(Shooting());
     }
-    
+
+    #endregion
+
+    #region Function Which Allows The Player To Take Damage With SafeFrames
+    public IEnumerator SafeFrames()
+    {
+        canTakeDamage = false;
+
+        yield return new WaitForSeconds(1f);
+
+        canTakeDamage = true;
+    }
     #endregion
 }
