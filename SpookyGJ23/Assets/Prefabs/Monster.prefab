@@ -80,37 +80,6 @@ CircleCollider2D:
   m_Offset: {x: -1.299107, y: -0.87826955}
   serializedVersion: 2
   m_Radius: 2.787163
---- !u!1 &1458074346221249297
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1551075473356844981}
-  m_Layer: 0
-  m_Name: Triangle
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1551075473356844981
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1458074346221249297}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0.7999999, y: 0, z: 0}
-  m_LocalScale: {x: 0.51, y: 0.51, z: 0.51}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 7591232735365373697}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!1 &2027276750484254936
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,6 +352,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3565166198148711757}
+        m_TargetAssemblyTypeName: AI_MonsterBehaviour, Assembly-CSharp
+        m_MethodName: HandleDamageReceiver
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3103784421460959281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -643,7 +624,7 @@ GameObject:
   - component: {fileID: 7591232735365373697}
   - component: {fileID: 1141685664929331539}
   - component: {fileID: 1580984101056536577}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: RotTrans
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -662,8 +643,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
-  m_Children:
-  - {fileID: 1551075473356844981}
+  m_Children: []
   m_Father: {fileID: 2876859635995769606}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &1141685664929331539

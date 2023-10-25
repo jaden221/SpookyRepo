@@ -1,10 +1,4 @@
-/*
-    sso was here bahahah
-*/
-
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,7 +7,7 @@ public class PlayerController : MonoBehaviour
     #region Variables
 
     [Header("GameObjects")]
-    [SerializeField] private GameObject firePrefab;
+    [SerializeField] private Transform firePrefab;
     #region Player Flame
     [SerializeField] private GameObject plrFlame;
     [SerializeField] private Vector2 plrFlameLeft = new Vector2(0.6f, 0.87f);
@@ -36,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Mechanics")]
     [SerializeField] private float speed = 5;
-    [SerializeField] public int lives = 3;
+    [SerializeField] public int lives = 100;
 
     [Space(5)]
     
@@ -50,6 +44,8 @@ public class PlayerController : MonoBehaviour
     [Header("Input")]
     [SerializeField] private InputActionReference moveRef;
     [SerializeField] private InputActionReference shootRef;
+    [SerializeField] InputActionReference aimRef;
+    InputAction aim;
     private InputAction move;
     private InputAction shoot;
 
@@ -80,6 +76,7 @@ public class PlayerController : MonoBehaviour
         canMove = true;
         move = moveRef;
         shoot = shootRef;
+        aim = aimRef;
         if (rayStart == null) rayStart = transform;
         rigidbody = GetComponent<Rigidbody2D>();
     }
@@ -98,15 +95,17 @@ public class PlayerController : MonoBehaviour
     {
         move.Enable();
         shoot.Enable();
+        aim.Enable();
     }
 
     void OnDisable()
     {
         move.Disable();
         shoot.Disable();
+        aim.Disable();
     }
 
-    private void Update()
+    void Update()
     {
         AnimationAndSoundsLogic();
     }
@@ -114,16 +113,6 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         Movement();
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Monster") && canTakeDamage)
-        {
-            PlayerLoseLife(1);
-            ScalePlayerFlame();
-            StartCoroutine(SafeFrames());
-        }
     }
 
     #endregion
@@ -250,10 +239,16 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitUntil(() => shoot.WasPressedThisFrame());
 
-        Instantiate(firePrefab, transform.position, Quaternion.identity);
+        Transform projInst = Instantiate(firePrefab, transform.position, Quaternion.identity);
+
+        Vector3 aimVec3 = aim.ReadValue<Vector2>();
+        Vector3 difference = aimVec3 - transform.position;
+        float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+        projInst.rotation = Quaternion.Euler(0.0f, 0.0f, rotationZ);
+
         canMove = false;
         plrAnim.SetBool("attack", true);
-        lives -= 1;
+        lives -= 5;
         ScalePlayerFlame();
 
         yield return new WaitForSeconds(1f);

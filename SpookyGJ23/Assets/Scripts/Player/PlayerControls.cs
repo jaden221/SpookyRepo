@@ -62,6 +62,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Value"",
+                    ""id"": ""d40c52d6-6a92-4d2e-badb-79751816ec3d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -317,6 +326,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Camera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""858efd7c-54cc-4eea-9469-4d1501fce091"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -329,6 +349,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Gameplay_Camera = m_Gameplay.FindAction("Camera", throwIfNotFound: true);
         m_Gameplay_Shoot = m_Gameplay.FindAction("Shoot", throwIfNotFound: true);
         m_Gameplay_Absorb = m_Gameplay.FindAction("Absorb", throwIfNotFound: true);
+        m_Gameplay_Aim = m_Gameplay.FindAction("Aim", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -394,6 +415,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Camera;
     private readonly InputAction m_Gameplay_Shoot;
     private readonly InputAction m_Gameplay_Absorb;
+    private readonly InputAction m_Gameplay_Aim;
     public struct GameplayActions
     {
         private @PlayerControls m_Wrapper;
@@ -402,6 +424,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Camera => m_Wrapper.m_Gameplay_Camera;
         public InputAction @Shoot => m_Wrapper.m_Gameplay_Shoot;
         public InputAction @Absorb => m_Wrapper.m_Gameplay_Absorb;
+        public InputAction @Aim => m_Wrapper.m_Gameplay_Aim;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -423,6 +446,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Absorb.started += instance.OnAbsorb;
             @Absorb.performed += instance.OnAbsorb;
             @Absorb.canceled += instance.OnAbsorb;
+            @Aim.started += instance.OnAim;
+            @Aim.performed += instance.OnAim;
+            @Aim.canceled += instance.OnAim;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -439,6 +465,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Absorb.started -= instance.OnAbsorb;
             @Absorb.performed -= instance.OnAbsorb;
             @Absorb.canceled -= instance.OnAbsorb;
+            @Aim.started -= instance.OnAim;
+            @Aim.performed -= instance.OnAim;
+            @Aim.canceled -= instance.OnAim;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -462,5 +491,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnCamera(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnAbsorb(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
     }
 }

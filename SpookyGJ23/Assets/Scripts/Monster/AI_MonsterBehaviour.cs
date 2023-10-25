@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
-using UnityEngine.WSA;
 
 public class AI_MonsterBehaviour : MonoBehaviour
 {
@@ -92,7 +90,6 @@ public class AI_MonsterBehaviour : MonoBehaviour
 
     void Awake()
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform; // I CANT FUCKING FIX IT MAN I TOOK THE EASY WAY OUT
         rigidbody = GetComponent<Rigidbody2D>();
         losChecker = GetComponentInChildren<AI_LosChecker>();
         springJoint = GetComponent<SpringJoint2D>();
@@ -132,8 +129,6 @@ public class AI_MonsterBehaviour : MonoBehaviour
     {
         if (targetlocked) return;
         target = transform;
-
-        if (target.gameObject.CompareTag("Scenery") || target.gameObject.CompareTag("CampFire")) HandleNoTarget();
     }
 
     void HandleNoTarget()
@@ -142,9 +137,16 @@ public class AI_MonsterBehaviour : MonoBehaviour
         target = null;
     }
 
+    public void HandleDamageReceiver(DamageDataReceived data) 
+    { 
+        if (targetlocked) return;
+
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
     void AttackTarget() 
     { 
-       if (health.GetHealthPercent < curThreshold) 
+       if (health.GetHealthPercent < healthThresholds[curThreshold] * health.GetMaxHealth) 
        {
             targetlocked = false;
             target = null;
@@ -165,16 +167,14 @@ public class AI_MonsterBehaviour : MonoBehaviour
 
             case 2:
                 Debug.Log("Beginning Shoot Behaviour");
-                StartCoroutine(PounceBehaviour());
+                StartCoroutine(ShootBehaviour());
                 break;
 
             case 3:
                 Debug.Log("Beginning Chase Behaviour");
-                StartCoroutine(PounceBehaviour());
+                StartCoroutine(ChaseBehaviour());
                 break;
         }
-
-        //When done attacking flee and then start roaming again
     }
 
     IEnumerator ChangeMoveInput(float minTime, float maxTime, float minRot, float maxRot)
